@@ -9,3 +9,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+    @property
+    def sale_price(self):
+        return self.price*0.8
