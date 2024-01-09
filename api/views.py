@@ -8,9 +8,9 @@ from product.serializers import ProductSerializer
 def api_response(request):
     if request.method == 'GET':
         # Handle GET request to retrieve data
-        model_data = Product.objects.all().first()
+        model_data = Product.objects.all()
         if model_data is not None:
-            serializer = ProductSerializer(model_data)
+            serializer = ProductSerializer(model_data,many=True)
             data = serializer.data
             return Response(data, status=status.HTTP_200_OK)  # OK status
         else:
@@ -20,9 +20,9 @@ def api_response(request):
         # Handle POST request to create or update data
         print(request.data)
         serializer = ProductSerializer(data=request.data)        
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             # Save the validated data to the database
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)  # Created
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # Bad Request
+            return Response({"invalid":"The data is invalid"})  # Bad Request
